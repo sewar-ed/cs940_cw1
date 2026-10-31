@@ -1,10 +1,16 @@
 """This module creates a station class"""
 
 import json
+import math
 import re
 from typing import List
 
 from exceptions import TubeError
+# The 11 Tube lines are the Bakerloo, Central, Circle, District, Hammersmith & City, Jubilee,
+# Metropolitan, Northern, Piccadilly, Victoria, and Waterloo & City
+# TO-DO: ask if this can be done (???)
+TUBE_LINES = ["bakerloo", "central", "circle", "district", "hammersmith",
+              "jubilee", "metropolitan", "northern", "piccadilly", "victoria", "waterloo"]
 
 
 class Station:
@@ -26,18 +32,30 @@ class Station:
 
     def is_interchange(self) -> bool:
         """Returns True if the station is an interchange station with tube lines not accounting for bus routes, False otherwise."""
-        modes = self.find_station_modes()
-        return True if "tube" in modes and len(self.interchange_lines) > 1 else False
+        return any(line in TUBE_LINES for line in self.interchange_lines)  # If any tube line passes in station it is an interchange
 
-    def find_station_modes(self) -> List[str]:
-        """Opens lines file of a station and returns a list of modes for the station."""
-        modes = []
-        # Each station has a corresponding lines file.
-        with open(f"/modules/cs940/cw1/lines/*.json", "r") as f:
-            lines = json.load(f)
-            # Each lines file has a stations object containing stations information (including modes).
-            if "modes" in lines:
-                modes.extend(lines["modes"])
-        return modes
-        # this is wrong because lines have multiple stations.. we need to look for all lines in folder that include station name..
-        pass
+    def distance_to(self, other: "Station") -> float:
+        """Returns distance between current station and 'other' using haversine distance and r = 6371.0"""
+        rad_lat, rad_lon = math.radians(self.lat), math.radians(
+            self.lon)  # math.cos/sin expect radians.
+        delta_phi = math.radians(other.lat) - rad_lat
+        delta_lambda = math.radians(other.lon) - rad_lon
+        # Using equations in link for question 1(b).
+        hav_theta = (1 - math.cos(delta_phi))/2 + math.cos(rad_lat) * \
+            math.cos(math.radians(other.lat))*((1-math.cos(delta_lambda))/2)
+        # Calculate theta using hav_theta.
+        theta = 2*math.asin(math.sqrt(hav_theta))
+        return theta*6371.0
+
+    # def find_station_modes(self) -> List[str]:
+    #     """Opens lines file of a station and returns a list of modes for the station."""
+    #     # modes = []
+    #     # # Each station has a corresponding lines file.
+    #     # with open(f"/modules/cs940/cw1/lines/*.json", "r") as f:
+    #     #     lines = json.load(f)
+    #     #     # Each lines file has a stations object containing stations information (including modes).
+    #     #     if "modes" in lines:
+    #     #         modes.extend(lines["modes"])
+    #     # return modes
+    #     # this is wrong because lines have multiple stations.. we need to look for all lines in folder that include station name..
+    #     pass
