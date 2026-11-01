@@ -39,7 +39,7 @@ class Heap:
         """
         Propagates the item down the heap to maintain the heap property.
         """
-        swaps = 0
+        swaps = 0  # TODO: DELETE SWAPS COUNTER
         child_idx = item_idx * 2 + 1
         while child_idx < len(self.heap):
             # using the same logic used in _propagate_up, we will calculate left_child_idx, right_child_idx,
