@@ -19,7 +19,9 @@ R = 6371.0  # given radius.
 class Station:
 
     def __init__(self, station_id: str, station_name: str, interchange_lines: List, zones: str, lat: float, lon: float):
-        """Init station object."""
+        """
+        Init station object.
+        """
         self.station_id, self.station_name = station_id, station_name
         # Split zones either by + or / and keep order.
         self.zones = re.split(r'\+ | /', zones)
@@ -39,11 +41,15 @@ class Station:
         self.repr_interchange_lines = interchange_lines
 
     def is_interchange(self) -> bool:
-        """Returns True if the station is an interchange station with tube lines not accounting for bus routes, False otherwise."""
+        """
+        Returns True if the station is an interchange station with tube lines not accounting for bus routes, False otherwise.
+        """
         return any(line in TUBE_LINES for line in self.interchange_lines_ids)  # If any tube line passes in station it is an interchange
 
     def distance_to(self, other: "Station") -> float:
-        """Returns distance between current station and 'other' using haversine distance and r = 6371.0"""
+        """
+        Returns distance between current station and 'other' using haversine distance and r = 6371.0.
+        """
         # Notice doc https://docs.python.org/3/library/math.html#math.cos
         # math.cos/sin expect radians as input, therefore we will convert the lat/lon values.
         rad_lat, rad_lon = math.radians(self.lat), math.radians(self.lon)
@@ -68,5 +74,7 @@ class Station:
         return self.station_id == other.station_id
 
     def __hash__(self):
-        """Hash on tuples of (id,name)"""
+        """
+        Hash on tuples of (id,name).
+        """
         return hash((self.station_id, self.station_name))

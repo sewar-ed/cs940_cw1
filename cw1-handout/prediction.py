@@ -10,7 +10,9 @@ class Prediction:
     def __init__(self, vehicle_id: str, naptan_id: str, line_id: str,
                  platform_name: str, destination_id: str, time_to_station: int,
                  current_location: str):
-        """Init prediction object."""
+        """
+        Init prediction object.
+        """
         self.train_id = vehicle_id
         self.next_station_id = naptan_id
         self.line_id = line_id
@@ -23,7 +25,9 @@ class Prediction:
         self.current_location = current_location
 
     def __lt__(self, other: Station):
-        """Compares two predictions based on time to station, uses id as tie breaker."""
+        """
+        Compares two predictions based on time to station, uses id as tie breaker.
+        """
         # Approach 1:
         # if self.time_to_station == other.time_to_station:
         # return self.train_id < other.train_id

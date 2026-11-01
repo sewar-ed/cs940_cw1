@@ -11,7 +11,9 @@ class Heap:
         self.heap = []  # should this be a private attribute?
 
     def _propagate_up(self, item_idx: int) -> None:
-        """Propagates the item up the heap to maintain the heap property."""
+        """
+        Propagates the item up the heap to maintain the heap property.
+        """
         while item_idx > 0 and self.heap[item_idx][0] < self.heap[(item_idx - 1) // 2][0]:
             # while new item has a *strictly* higher priority (to maintain insertion order in case of ties) than its parent,
             # we will swap them and update the new_item_idx, we will calculate current_parent_indx using: (new_item_idx - 1) // 2.

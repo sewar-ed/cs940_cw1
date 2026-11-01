@@ -33,11 +33,15 @@ class Branch:
         return [*zip([self.id]*len(self.next_branches), self.next_branches_ids)]
 
     def __iter__(self):
-        """Iterates over Branch by going over stations in branch."""
+        """
+        Iterates over Branch by going over stations in branch.
+        """
         return iter(self.stations)
 
     def __len__(self):
-        """Returns len of Branch by number of edges between stations in branch."""
+        """
+        Returns len of Branch by number of edges between stations in branch.
+        """
         return len(self.station_edges)
 
     def __contains__(self, station: Station):

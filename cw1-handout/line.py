@@ -26,7 +26,9 @@ class Line:
         raise TubeError(f"Branch does not exist on line {id}.")
 
     def get_stations(self) -> set[str]:
-        """Returns a list of all stations on all branches on line."""
+        """
+        Returns a list of all stations on all branches on line.
+        """
         # Approach 1: use nested for loop to go over branches then
         #  go over stations in each branch to update the set in each such inner iteration.
 
