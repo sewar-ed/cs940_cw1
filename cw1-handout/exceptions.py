@@ -1,14 +1,17 @@
 """
-This module creates our own exceptions heirarchy. 1(a)
+This module creates our own Exceptions heirarchy. 1(a)
 """
-def TubeError(Exception):
+
+
+class TubeError(Exception):
     """ Exception raised for tube related errors."""
 
     def __init__(self, error_message: str = ""):
         self.message = error_message
         super().__init__(self.message)
 
-def DataStructureError(Exception):
+
+class DataStructureError(Exception):
     """ Exception raised for data structure related errors."""
 
     def __init__(self, error_message: str = ""):
