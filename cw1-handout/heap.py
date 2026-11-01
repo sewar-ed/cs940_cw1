@@ -97,6 +97,10 @@ class Heap:
         # objects in the heap, return all stored objects. Raise HeapError for other negative values.
         # Your solution should exploit the ordering already provided by the binary-heap structure
         # rather than sorting all entries or copying the entire heap and repeatedly calling pop
+
+        # self notes: I cant use BFS as the we only know that values @ level_n are <= level_n+1
+        # DFS IS NOT APPLICABLE AS WE CANT GUARANTEE ORDER OF CHILDREN RECURSIVLEY.
+        # ASK: we can use bfs variation but can we use additional memort? another heap?
         pass
 
     def heapify(cls, items: List) -> "Heap":

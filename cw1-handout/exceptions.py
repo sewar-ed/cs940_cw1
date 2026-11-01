@@ -25,3 +25,11 @@ class HeapError(DataStructureError):
     def __init__(self, error_message: str = ""):
         self.message = error_message
         super().__init__(self.message)
+
+
+class TrieError(DataStructureError):
+    """ Exception raised for trie related errors."""
+
+    def __init__(self, error_message: str = ""):
+        self.message = error_message
+        super().__init__(self.message)
