@@ -11,6 +11,8 @@ from exceptions import TubeError
 # TO-DO: ask if this can be done (???)
 TUBE_LINES = ["bakerloo", "central", "circle", "district", "hammersmith",
               "jubilee", "metropolitan", "northern", "piccadilly", "victoria", "waterloo"]
+MAX_LAT, MIN_LAT = 90, -90
+MAX_LON, MIN_LON = 180, -180
 
 
 class Station:
@@ -23,15 +25,15 @@ class Station:
         # Get id per line if it exists
         self.interchange_lines_ids = [line['id']
                                       for line in interchange_lines if 'id' in line]
-        # Check if lat in [-90, 90] and lon in [-180, 180]
-        if lat < -90 or lat > 90:
+        # Check if lat and lon are within normal bounds.
+        if lat < MIN_LAT or lat > MAX_LAT:
             raise TubeError(f"Latitude {lat} is out of bounds.")
         self.lat = lat
-        if lon < -180 or lon > 180:
+        if lon < MIN_LON or lon > MAX_LON:
             raise TubeError(f"Longitude {lon} is out of bounds.")
         self.lon = lon
 
-        # For use in __repr__
+        # For later use in __repr__
         self.repr_zones = zones
         self.repr_interchange_lines = interchange_lines
 
@@ -65,16 +67,4 @@ class Station:
 
     def __hash__(self):
         """Hash on tuples of (id,name)"""
-        return hash(self.station_id, self.station_name)
-    # def find_station_modes(self) -> List[str]:
-    #     """Opens lines file of a station and returns a list of modes for the station."""
-    #     # modes = []
-    #     # # Each station has a corresponding lines file.
-    #     # with open(f"/modules/cs940/cw1/lines/*.json", "r") as f:
-    #     #     lines = json.load(f)
-    #     #     # Each lines file has a stations object containing stations information (including modes).
-    #     #     if "modes" in lines:
-    #     #         modes.extend(lines["modes"])
-    #     # return modes
-    #     # this is wrong because lines have multiple stations.. we need to look for all lines in folder that include station name..
-    #     pass
+        return hash((self.station_id, self.station_name))

@@ -12,6 +12,7 @@ class Line:
         self.id = line_id
         self.name = line_name
         self.branches: dict[int, Branch] = {}
+        self.stations_on_line: list[str] = []
 
     def add_branch(self, branch: Branch) -> None:
         # is this true?
@@ -36,16 +37,18 @@ class Line:
         all_stations = list(chain.from_iterable(
             [b.stations for b in self.branches]))
         stations_ids.update(all_stations)
+        # for later use in magic methods.
+        self.stations_on_line = list(stations_ids)
         return stations_ids
 
     def __iter__(self):
-        pass
+        return iter(self.stations_on_line)
 
     def __len__(self):
-        pass
+        return len(self.stations_on_line)
 
-    def __contains__(self):
-        pass
+    def __contains__(self, station: str):
+        return station in self.stations_on_line
 
     def __repr__(self):
-        pass
+        return f"Line(id={self.id}, name={self.name})"
