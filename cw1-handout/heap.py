@@ -35,10 +35,11 @@ class Heap:
         # Step 2: propagate the new item up the heap to maintain the heap property.
         self._propagate_up(new_item_idx)
 
-    def _propagate_down(self, item_idx: int) -> None:
+    def _propagate_down(self, item_idx: int) -> int:
         """
         Propagates the item down the heap to maintain the heap property.
         """
+        swaps = 0
         child_idx = item_idx * 2 + 1
         while child_idx < len(self.heap):
             # using the same logic used in _propagate_up, we will calculate left_child_idx, right_child_idx,
@@ -54,8 +55,10 @@ class Heap:
                 self.heap[child_idx], self.heap[item_idx] = self.heap[item_idx], self.heap[child_idx]
                 item_idx = child_idx
                 child_idx = item_idx * 2 + 1
+                swaps += 1
             else:
                 break
+        return swaps
 
     def pop(self) -> Any:
         """
@@ -103,12 +106,22 @@ class Heap:
         # ASK: we can use bfs variation but can we use additional memort? another heap?
         pass
 
+    @classmethod
     def heapify(cls, items: List) -> "Heap":
-        # TODO: constructs and returns a heap from a list of
-        # key–object pairs. The order of pairs in items is treated as their insertion order when
-        # resolving equal keys. The resulting heap must not alias the input list, and construction
-        # must run in O(n) time
-        pass
+        """
+        Constructs and returns a heap from a list of key,object pairs. The order of pairs in items is 
+        treated as their insertion order when resolving equal keys.
+        """
+        result_items = cls()
+        result_items.heap = items[:]
+        swaps = 0
+        # leaves already satisfy heap property, we will look for last parent and propagate down using its key,
+        # the path from parent to leaves is shorter than root to some node considering the heap is dense on lower levels,
+        # therefore the requirement of O(n) is satisfied. Resources used as reference:
+        # https://stackoverflow.com/questions/9755721/how-can-building-a-heap-be-on-time-complexity
+        for i in range(len(result_items.heap) // 2 - 1, -1, -1):
+            swaps += result_items._propagate_down(i)
+        return result_items, swaps
 
     def __len__(self) -> int:
         return len(self.heap)
@@ -145,3 +158,12 @@ if __name__ == '__main__':
         print(f"pushed ({key}, {obj}), heap: {my_heap.heap}")
     my_heap.pop()
     print(f"popped, heap: {my_heap.heap}")
+    print(f"peek: {my_heap.peek()}")
+    print("=================")
+    print("Running Heapify tests...")
+    # TODO: debug this does not preserve insertion order for equal keys
+    list_to_heapify = [(1, 'e'), (1, 'a'), (1, 'c'), (1, 'd'), (1, 'b')]
+    print(f"list to heapify: {list_to_heapify}")
+    heap_from_list, swaps = Heap.heapify(list_to_heapify)
+    print(f"heap from list: {heap_from_list.heap}")
+    print(f"number of swaps: {swaps}")
