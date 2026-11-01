@@ -14,6 +14,8 @@ class TubeError(Exception):
 class DataStructureError(Exception):
     """ Exception raised for data structure related errors."""
 
-    def __init__(self, error_message: str = ""):
+    def __init__(self, error_message: str = "", type: str = ""):
         self.message = error_message
-        super().__init__(self.message)
+        self.type = type
+        super().__init__(
+            f"Error for data structure of type {self.type}: {self.message}")
