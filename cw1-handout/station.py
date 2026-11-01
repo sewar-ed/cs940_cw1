@@ -9,10 +9,11 @@ from exceptions import TubeError
 # The 11 Tube lines are the Bakerloo, Central, Circle, District, Hammersmith & City, Jubilee,
 # Metropolitan, Northern, Piccadilly, Victoria, and Waterloo & City
 # TO-DO: ask if this can be done (???)
-TUBE_LINES = ["bakerloo", "central", "circle", "district", "hammersmith",
-              "jubilee", "metropolitan", "northern", "piccadilly", "victoria", "waterloo"]
+TUBE_LINES = ['bakerloo', 'central', 'circle', 'district', 'hammersmith-city',
+              'jubilee', 'metropolitan', 'northern', 'piccadilly', 'victoria', 'waterloo-city']
 MAX_LAT, MIN_LAT = 90, -90
 MAX_LON, MIN_LON = 180, -180
+R = 6371.0  # given radius.
 
 
 class Station:
@@ -43,8 +44,9 @@ class Station:
 
     def distance_to(self, other: "Station") -> float:
         """Returns distance between current station and 'other' using haversine distance and r = 6371.0"""
-        rad_lat, rad_lon = math.radians(self.lat), math.radians(
-            self.lon)  # math.cos/sin expect radians.
+        # Notice doc https://docs.python.org/3/library/math.html#math.cos
+        # math.cos/sin expect radians as input, therefore we will convert the lat/lon values.
+        rad_lat, rad_lon = math.radians(self.lat), math.radians(self.lon)
         delta_phi = math.radians(other.lat) - rad_lat
         delta_lambda = math.radians(other.lon) - rad_lon
         # Using equations in link for question 1(b).
@@ -52,7 +54,7 @@ class Station:
             math.cos(math.radians(other.lat))*((1-math.cos(delta_lambda))/2)
         # Calculate theta using hav_theta.
         theta = 2*math.asin(math.sqrt(hav_theta))
-        return theta*6371.0
+        return theta*R
 
     def __str__(self):
         return f"This is {self.station_name} station."

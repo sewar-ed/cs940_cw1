@@ -7,6 +7,7 @@ from station import Station
 
 
 class Branch:
+
     def __init__(self, branch_id: int, next_branch_ids: List[int]):
         self.id = branch_id
         self.next_branches_ids = next_branch_ids
@@ -20,8 +21,8 @@ class Branch:
         Returns station edges along the branch.
         Output: [(station_on_branch, next_station_reachable_on_branch),..]
         """
-        # approach 1: [(self.stations[i], self.stations[i+1]) for i in range(len(self.stations)-1)]
-        # approach 2 / more efficient:
+        # Approach 1: [(self.stations[i], self.stations[i+1]) for i in range(len(self.stations)-1)]
+        # Approach 2 / more efficient:
         return [*zip(self.stations, self.stations[1:])]
 
     def branch_edges(self) -> List[tuple[int, int]]:

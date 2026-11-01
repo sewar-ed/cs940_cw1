@@ -8,6 +8,7 @@ from exceptions import TubeError
 
 
 class Line:
+
     def __init__(self, line_id: str, line_name: str):
         self.id = line_id
         self.name = line_name
@@ -26,10 +27,10 @@ class Line:
 
     def get_stations(self) -> set[str]:
         """Returns a list of all stations on all branches on line."""
-        # approach 1: use nested for loop to go over branches then
+        # Approach 1: use nested for loop to go over branches then
         #  go over stations in each branch to update the set in each such inner iteration.
 
-        # approach 2: create intermidiate list of lists, flatten it and update the set once
+        # Approach 2: create intermidiate list of lists, flatten it and update the set once
         # stations_per_branch = [b.stations for b in self.branches]
         # all_stations = chain(*[stations_per_branch])
         # We will use chain.from_iterable to skip the flattening and intermediate list.
@@ -51,4 +52,5 @@ class Line:
         return station in self.stations_on_line
 
     def __repr__(self):
+        # To ask: is this supposed to over get_stations()?
         return f"Line(id={self.id}, name={self.name})"
