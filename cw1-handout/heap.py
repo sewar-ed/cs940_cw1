@@ -41,13 +41,14 @@ class Heap:
         """
         Propagates the item down the heap to maintain the heap property.
         """
-        child_idx = item_idx * 2 + 1  # updated later to whichever child has the lowest priority
+        child_idx = item_idx * 2 + \
+            1  # updated later to whichever child has the lowest priority in *
         while child_idx < len(self.heap):
             # using the same logic used in _propagate_up, we will calculate left_child_idx, right_child_idx,
             # we will swap when children have *strictly* lower priority to maintain insertion order
 
             if child_idx + 1 < len(self.heap) and self.heap[child_idx+1][0] < self.heap[child_idx][0]:
-                # right child exists and its priority is < then left child (< to keep insertion order).
+                # *: right child exists and its priority is < then left child.
                 child_idx += 1
 
             if self.heap[child_idx][0] < self.heap[item_idx][0]:
