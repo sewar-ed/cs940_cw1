@@ -37,7 +37,7 @@ class Heap:
         # Step 2: propagate the new item up the heap to maintain the heap property.
         self._propagate_up(new_item_idx)
 
-    def _propagate_down(self, item_idx: int, is_heapify: bool = False) -> None:
+    def _propagate_down(self, item_idx: int) -> None:
         """
         Propagates the item down the heap to maintain the heap property.
         """
