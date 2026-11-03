@@ -112,7 +112,7 @@ class Heap:
         ksmallest = []
         helper_heap = Heap()
         # push curr min item and its index
-        # since our pop only returns obj we will use (key, (index,obj)) tuples
+        # since our pop only returns obj we will use (key, obj=(index,obj)) tuples
         helper_heap.push(self.heap[0][0], (0, self.heap[0]))
         while len(ksmallest) < k:
             curr_idx, curr_obj = helper_heap.pop()  # current min
