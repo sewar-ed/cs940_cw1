@@ -37,30 +37,25 @@ class Heap:
         # Step 2: propagate the new item up the heap to maintain the heap property.
         self._propagate_up(new_item_idx)
 
-    def _propagate_down(self, item_idx: int) -> int:
+    def _propagate_down(self, item_idx: int, is_heapify: bool = False) -> None:
         """
         Propagates the item down the heap to maintain the heap property.
         """
-        swaps = 0  # TODO: DELETE SWAPS COUNTER
         child_idx = item_idx * 2 + 1
         while child_idx < len(self.heap):
             # using the same logic used in _propagate_up, we will calculate left_child_idx, right_child_idx,
-            # unlike _propagate_up we will swap when children have lower or *equal* priority to maintain insertion order
+            # unlike we will swap when children have *strictly* lower priority to maintain insertion order
 
             if child_idx + 1 < len(self.heap) and self.heap[child_idx+1][0] < self.heap[child_idx][0]:
                 # right child exists and its priority is < then left child (< to keep insertion order).
                 child_idx += 1
 
-            # (<= to keep insertion order: rightmost leaf is the last inserted with this priority)
-            # ASK: should I track insertion for (key,obj)?
-            if self.heap[child_idx][0] <= self.heap[item_idx][0]:
+            if self.heap[child_idx][0] < self.heap[item_idx][0]:
                 self.heap[child_idx], self.heap[item_idx] = self.heap[item_idx], self.heap[child_idx]
                 item_idx = child_idx
                 child_idx = item_idx * 2 + 1
-                swaps += 1
             else:
                 break
-        return swaps
 
     def pop(self) -> Any:
         """
@@ -95,18 +90,43 @@ class Heap:
         return self.heap[0][1]
 
     def ksmallest(self, k: int) -> List[Any]:
-        # TODO: returns the objects associated with the k
-        # smallest keys, in non-decreasing key order, without modifying the heap. Objects with
-        # equal keys must appear in insertion order. Support k = -1 as a request for all stored
-        # objects and k=0 as a request for an empty list. If k is greater than the number of
-        # objects in the heap, return all stored objects. Raise HeapError for other negative values.
-        # Your solution should exploit the ordering already provided by the binary-heap structure
-        # rather than sorting all entries or copying the entire heap and repeatedly calling pop
+        """
+        Returns the objects associated with the k
+        smallest keys, in non-decreasing key order, without modifying the heap.
+        """
+        # approach 1: shallow copy heap and pop K times O(n+klogn).
 
-        # self notes: I cant use BFS as the we only know that values @ level_n are <= level_n+1
-        # DFS IS NOT APPLICABLE AS WE CANT GUARANTEE ORDER OF CHILDREN RECURSIVLEY.
-        # ASK: we can use bfs variation but can we use additional memort? another heap?
-        pass
+        # approach 2: use bfs with modifications. Since elements in the heap guarantee order with respect to level (parent-children),
+        #  we can find insertion order of the children to our queue/list by comparing their priority. \
+        # However, the complexity of this is O(k^2) since for each item we will have to scan its children.
+
+        # approach 3: use our min heap class with a helper heap that would only contain candidates to be in ksmallest and not the whole list,
+        # which would bring our extraction down from O(logn) to O(logk).
+        if k == 0:
+            return []
+        if k == -1 or k > len(self.heap):
+            k = len(self.heap)
+        if k < 0:
+            raise HeapError(
+                "Cannot extract negative number of K elements from Heap.")
+        ksmallest = []
+        helper_heap = Heap()
+        # push curr min item and its index
+        # since our pop only returns obj we will use (key, (index,obj)) tuples
+        helper_heap.push(self.heap[0][0], (0, self.heap[0]))
+        while len(ksmallest) < k:
+            curr_idx, curr_obj = helper_heap.pop()  # current min
+            print(curr_obj)
+            ksmallest.append(curr_obj[1])
+            left_child, right_child = 2*curr_idx+1, 2 * \
+                curr_idx+2  # if children exist, push to heap
+            if left_child < len(self.heap):
+                helper_heap.push(
+                    self.heap[left_child], (left_child, self.heap[left_child]))
+            if right_child < len(self.heap):
+                helper_heap.push(
+                    self.heap[right_child], (right_child, self.heap[right_child]))
+        return ksmallest
 
     @classmethod
     def heapify(cls, items: List) -> "Heap":
@@ -116,14 +136,13 @@ class Heap:
         """
         result_items = cls()
         result_items.heap = items[:]
-        swaps = 0
         # leaves already satisfy heap property, we will look for last parent and propagate down using its key,
         # the path from parent to leaves is shorter than root to some node considering the heap is dense on lower levels,
         # therefore the requirement of O(n) is satisfied. Resources used as reference:
         # https://stackoverflow.com/questions/9755721/how-can-building-a-heap-be-on-time-complexity
         for i in range(len(result_items.heap) // 2 - 1, -1, -1):
-            swaps += result_items._propagate_down(i)
-        return result_items, swaps
+            result_items._propagate_down(i)
+        return result_items
 
     def __len__(self) -> int:
         return len(self.heap)
@@ -142,7 +161,7 @@ if __name__ == '__main__':
     my_heap = Heap()
     print(f"initial heap: {my_heap}")
     # objs = [(1, "a"), (2, "b"), (3, "c"), (4, "d"), (5, "e")]
-    objs = [(1, "a"), (2, "b"), (2, "c"), (4, "d"), (5, "e")]
+    objs = [(1, "a"), (2, "b"), (3, "c"), (4, "d"), (5, "e")]
     # results:
     # Running Heap Class tests...
     # initial heap: Heap()
@@ -158,14 +177,14 @@ if __name__ == '__main__':
     for key, obj in objs:
         my_heap.push(key, obj)
         print(f"pushed ({key}, {obj}), heap: {my_heap.heap}")
-    my_heap.pop()
-    print(f"popped, heap: {my_heap.heap}")
-    print(f"peek: {my_heap.peek()}")
-    print("=================")
-    print("Running Heapify tests...")
-    # TODO: debug this does not preserve insertion order for equal keys
-    list_to_heapify = [(1, 'e'), (1, 'a'), (1, 'c'), (1, 'd'), (1, 'b')]
-    print(f"list to heapify: {list_to_heapify}")
-    heap_from_list, swaps = Heap.heapify(list_to_heapify)
-    print(f"heap from list: {heap_from_list.heap}")
-    print(f"number of swaps: {swaps}")
+    # my_heap.pop()
+    # print(f"popped, heap: {my_heap.heap}")
+    # print(f"peek: {my_heap.peek()}")
+    # print("=================")
+    # print("Running Heapify tests...")
+    # # TODO: debug this does not preserve insertion order for equal keys
+    # list_to_heapify = [(1, 'e'), (1, 'a'), (1, 'c'), (1, 'd'), (1, 'b')]
+    # print(f"list to heapify: {list_to_heapify}")
+    # heap_from_list = Heap.heapify(list_to_heapify)
+    print(f"ksmallest from heap: {my_heap.ksmallest(3)}")
+    # print(f"number of swaps: {swaps}")
