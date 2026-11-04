@@ -6,34 +6,52 @@
 # queries below must remain consistent when new data is added.
 
 
+from exceptions import TubeError
 from line import Line
 from prediction import Prediction
 from station import Station
+from trie import Trie
 
 
 class Network:
     def __init__(self):
-        # TODO: initialises an empty network
-        pass
+        """
+        Initialises an empty network.
+        """
+        self.lines = {}
+        self.stations = {}
+        self.station_trie = Trie()
 
     def add_line(self, line: Line) -> None:
-        # TODO: adds line to the network, indexed by its line_id
-        pass
+        """
+        Adds line to the network, indexed by its line_id.
+        """
+        self.lines[line.id] = line
 
     def get_line(self, line_id: str) -> Line:
-        # TODO: returns the line with the given identifier.
-        # Raise an appropriate exception if it is unknown
-        pass
+        """
+        Returns the line with the given identifier,
+        Raises an appropriate exception if it is unknown.
+        """
+        if line_id in self.lines:
+            return self.lines[line_id]
+        raise TubeError(f"No such line: '{line_id}' in netwrok.")
 
     def add_station(self, station: Station) -> None:
-        # TODO: adds station to the network, indexed by its station_id, and makes its name available to station-prefix searches. Station
-        # names should be indexed in a consistent normalised form so that capitalisation and punctuation do not prevent sensible matches
-        pass
+        """
+        Adds station to the network, indexed by its station_id, and makes its name available to station-prefix searches.
+        """
+        self.stations[station.station_id] = station
+        self.station_trie.insert(station.station_name, station)
 
     def get_station(self, station_id: str) -> Station:
-        # TODO: returns the station with the
-        # given identifier. Raise an appropriate exception if it is unknown
-        pass
+        """
+        Returns the station with the given identifier,
+        Raises an appropriate exception if it is unknown.
+        """
+        if station_id in self.stations:
+            return self.stations[station_id]
+        raise TubeError(f"No such station: '{station_id}' in netwrok.")
 
     def add_prediction(self, prediction: Prediction) -> None:
         # TODO: adds a prediction and
