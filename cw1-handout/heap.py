@@ -1,8 +1,6 @@
 """This module defines our Binary min-heap data structure."""
 
 
-from typing import Any, List
-
 from exceptions import HeapError
 
 
@@ -58,7 +56,7 @@ class Heap:
             else:
                 break
 
-    def pop(self) -> Any:
+    def pop(self) -> any:
         """
         Removes and returns the object with the minimum key, restoring
         the heap invariant afterwards. If several objects share the minimum key, return the one
@@ -79,7 +77,7 @@ class Heap:
         self._propagate_down(0)
         return min_item[1]
 
-    def peek(self) -> Any:
+    def peek(self) -> any:
         """
         Returns, without removing it, the next object according to the same
         priority and tie-breaking rules as pop. Raise HeapError if the heap is empty.
@@ -90,7 +88,7 @@ class Heap:
         # By construction of our heap, this is just the obj of root item, O(1).
         return self.heap[0][1]
 
-    def ksmallest(self, k: int) -> List[Any]:
+    def ksmallest(self, k: int) -> list[any]:
         """
         Returns the objects associated with the k
         smallest keys, in non-decreasing key order, without modifying the heap.
@@ -130,7 +128,7 @@ class Heap:
         return ksmallest
 
     @classmethod
-    def heapify(cls, items: List) -> "Heap":
+    def heapify(cls, items: list) -> "Heap":
         """
         Constructs and returns a heap from a list of key,object pairs. The order of pairs in items is 
         treated as their insertion order when resolving equal keys.

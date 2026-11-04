@@ -3,7 +3,6 @@
 import json
 import math
 import re
-from typing import List
 
 from exceptions import TubeError
 # The 11 Tube lines are the Bakerloo, Central, Circle, District, Hammersmith & City, Jubilee,
@@ -18,7 +17,7 @@ R = 6371.0  # given radius.
 
 class Station:
 
-    def __init__(self, station_id: str, station_name: str, interchange_lines: List, zones: str, lat: float, lon: float):
+    def __init__(self, station_id: str, station_name: str, interchange_lines: list, zones: str, lat: float, lon: float):
         """
         Init station object.
         """

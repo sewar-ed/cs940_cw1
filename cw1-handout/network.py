@@ -5,10 +5,6 @@
 # Network must implement only a ‘single source-of-truth’ for lines and stations: lines are identified by line_id and stations by station_id. Any additional structures used to support the
 # queries below must remain consistent when new data is added.
 
-from ast import Raise
-
-from ast import Raise
-from typing import List
 
 from line import Line
 from prediction import Prediction
@@ -48,7 +44,7 @@ class Network:
 
     ## Implement the following query methods:##
 
-    def search_by_prefix(self, prefix: str) -> List[Station]:
+    def search_by_prefix(self, prefix: str) -> list[Station]:
         # TODO: returns the stations for
         # which the prefix occurs at the beginning of any word in the station name. Each station
         # must occur at most once, and results must be sorted lexicographically by station_name.
@@ -57,21 +53,21 @@ class Network:
         # and 11 stations that match with ‘south
         pass
 
-    def next_arrivals_by_station(self, station_id: str, k: int) -> List[Prediction]:
+    def next_arrivals_by_station(self, station_id: str, k: int) -> list[Prediction]:
         # TODO: returns the next k predictions for the specified station
         pass
 
-    def next_arrivals_by_line(self, line_id: str, k: int) -> List[Prediction]:
+    def next_arrivals_by_line(self, line_id: str, k: int) -> list[Prediction]:
         # TODO: returns the next k predictions for the specified line
         pass
 
-    def next_arrivals_by_station_and_line(self, station_id: str, line_id: str, k: int) -> List[Prediction]:
+    def next_arrivals_by_station_and_line(self, station_id: str, line_id: str, k: int) -> list[Prediction]:
         # TODO: returns the next k predictions for the specified station
         # that belong to the specified line. Raise an appropriate exception if the station or line is
         # unknown, or if the line does not serve that station;
         pass
 
-    def next_stations_by_train(self, vehicle_id: str, line_id: str, k: int) -> List[Prediction]:
+    def next_stations_by_train(self, vehicle_id: str, line_id: str, k: int) -> list[Prediction]:
         # TODO: returns the next k station predictions for the identified vehicle on
         # the given line
         pass

@@ -1,6 +1,5 @@
 """This module defines a Branch class."""
 
-from typing import List
 
 from exceptions import DataStructureError
 from station import Station
@@ -8,15 +7,15 @@ from station import Station
 
 class Branch:
 
-    def __init__(self, branch_id: int, next_branch_ids: List[int]):
+    def __init__(self, branch_id: int, next_branch_ids: list[int]):
         self.id = branch_id
         self.next_branches_ids = next_branch_ids
-        self.stations: List[str] = []
+        self.stations: list[str] = []
 
     def add_station(self, station: str) -> None:
         self.stations.append(station)
 
-    def station_edges(self) -> List[tuple[str, str]]:
+    def station_edges(self) -> list[tuple[str, str]]:
         """
         Returns station edges along the branch.
         Output: [(station_on_branch, next_station_reachable_on_branch),..]
@@ -25,7 +24,7 @@ class Branch:
         # Approach 2 / more efficient:
         return [*zip(self.stations, self.stations[1:])]
 
-    def branch_edges(self) -> List[tuple[int, int]]:
+    def branch_edges(self) -> list[tuple[int, int]]:
         """
         Returns the edges between current branch and its next branches.
         Output: [(current_branch_id, next_branch_id),..]
