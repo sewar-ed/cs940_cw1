@@ -16,8 +16,11 @@ class Line:
         self.stations_on_line: list[str] = []
 
     def add_branch(self, branch: Branch) -> None:
-        # is this true?
-        if branch in self.branches[self.id]:
+        """
+        Adds branch to our line,
+        raises an exception if branch is already on the line.
+        """
+        if branch.id in self.branches:
             raise TubeError(f"Branch is already present on line {self.name}.")
 
     def get_branch(self, id: int) -> Branch:

@@ -70,12 +70,12 @@ class Network:
             prediction.time_to_station, prediction)
         if (prediction.next_station_id, prediction.line_id) not in self.station_and_line_arrivals_pred:
             self.station_and_line_arrivals_pred[(
-                prediction.next_station_id, prediction.line_id)] = {}
+                prediction.next_station_id, prediction.line_id)] = Heap()
         self.station_and_line_arrivals_pred[(prediction.next_station_id, prediction.line_id)].push(
             prediction.time_to_station, prediction)
         train_key = f"{prediction.vehicle_id}{prediction.line_id}"
-        if train_key in self.train_arrivals_pred:
-            self.train_arrivals_pred[train_key]
+        if train_key not in self.train_arrivals_pred:
+            self.train_arrivals_pred[train_key] = Heap()
         self.train_arrivals_pred[train_key].push(
             prediction.time_to_station, prediction)
 
@@ -105,7 +105,7 @@ class Network:
         Returns the next k predictions for the specified station that belong to the specified line. 
         Raise an appropriate exception if the station or line is unknown, or if the line does not serve that station
         """
-        if station_id not in self.line[line_id].get_stations():
+        if (station_id, line_id) not in self.station_and_line_arrivals_pred:
             raise TubeError(
                 f"Line: {line_id} does not serve station: {station_id}.")
         return self.station_and_line_arrivals_pred[(station_id, line_id)].ksmallest(k)

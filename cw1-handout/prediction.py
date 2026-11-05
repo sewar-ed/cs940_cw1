@@ -30,15 +30,15 @@ class Prediction:
         """
         # Approach 1:
         # if self.time_to_station == other.time_to_station:
-        # return self.train_id < other.train_id
+        # return self.vehicle_id < other.vehicle_id
         # return self.time_to_station < other.time_to_station
         # Approach 2: using lex. comparison of tuples
         # python doc: https://docs.python.org/3/reference/expressions.html#comparisons
         # ids will be compared only if times are equal.
-        return (self.time_to_station, self.train_id) < (other.time_to_station, other.train_id)
+        return (self.time_to_station, self.vehicle_id) < (other.time_to_station, other.vehicle_id)
 
     def __repr__(self):
-        return (f"Prediction('{self.train_id}', '{self.next_station_id}', "
+        return (f"Prediction('{self.vehicle_id}', '{self.next_station_id}', "
                 f"'{self.line_id}', '{self.platform_name}', "
                 f"'{self.destination_id}', '{self.time_to_station}', "
                 f"'{self.current_location}')")
