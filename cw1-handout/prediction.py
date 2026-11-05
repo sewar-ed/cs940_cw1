@@ -13,7 +13,7 @@ class Prediction:
         """
         Init prediction object.
         """
-        self.train_id = vehicle_id
+        self.vehicle_id = vehicle_id
         self.next_station_id = naptan_id
         self.line_id = line_id
         self.platform_name = platform_name

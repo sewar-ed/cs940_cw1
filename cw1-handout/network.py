@@ -7,6 +7,7 @@
 
 
 from exceptions import TubeError
+from heap import Heap
 from line import Line
 from prediction import Prediction
 from station import Station
@@ -21,6 +22,11 @@ class Network:
         self.lines = {}
         self.stations = {}
         self.station_trie = Trie()
+        # working backwards from queries we need in task 4:
+        self.station_arrivals_pred = {}
+        self.line_arrivals_pred = {}
+        self.station_and_line_arrivals_pred = {}
+        self.train_arrivals_pred = {}
 
     def add_line(self, line: Line) -> None:
         """
@@ -54,47 +60,69 @@ class Network:
         raise TubeError(f"No such station: '{station_id}' in netwrok.")
 
     def add_prediction(self, prediction: Prediction) -> None:
-        # TODO: adds a prediction and
+        """
+        # Adds a prediction and
         # updates the information needed to support each of the arrival queries below. Predictions are ordered by their time_to_station value.
-        # Hint: f'{prediction.vehicle_id}{prediction.line_id}' is a unique key to identify
-        # a train
-        pass
-
-    ## Implement the following query methods:##
+        """
+        # create heap for unseen station
+        if prediction.next_station_id not in self.station_arrivals_pred:
+            self.station_arrivals_pred[prediction.next_station_id] = Heap()
+        # add item to heap, key=time_to_station to order by it
+        self.station_arrivals_pred[prediction.next_station_id].push(
+            prediction.time_to_station, prediction)
+        if prediction.line_id not in self.line_arrivals_pred:
+            self.line_arrivals_pred[prediction.line_id] = Heap()
+        self.line_arrivals_pred[prediction.line_id].push(
+            prediction.time_to_station, prediction)
+        if (prediction.next_station_id, prediction.line_id) not in self.station_and_line_arrivals_pred:
+            self.station_and_line_arrivals_pred[(
+                prediction.next_station_id, prediction.line_id)] = {}
+        self.station_and_line_arrivals_pred[(prediction.next_station_id, prediction.line_id)].push(
+            prediction.time_to_station, prediction)
+        train_key = f"{prediction.vehicle_id}{prediction.line_id}"
+        if train_key in self.train_arrivals_pred:
+            self.train_arrivals_pred[train_key]
+        self.train_arrivals_pred[train_key].push(
+            prediction.time_to_station, prediction)
+    ## Query methods:##
 
     def search_by_prefix(self, prefix: str) -> list[Station]:
-        # TODO: returns the stations for
-        # which the prefix occurs at the beginning of any word in the station name. Each station
-        # must occur at most once, and results must be sorted lexicographically by station_name.
-        # An empty prefix returns every station;
-        # Hint: there are 24 stations that match with ‘park’, 12 stations that match with ‘road’,
-        # and 11 stations that match with ‘south
-        pass
+        """
+        Returns the stations for which the prefix 
+        occurs at the beginning of any word in the station name.
+        """
+        return self.station_trie.search_by_prefix(prefix)
 
     def next_arrivals_by_station(self, station_id: str, k: int) -> list[Prediction]:
-        # TODO: returns the next k predictions for the specified station
-        pass
+        """
+        Returns the next k predictions for the specified station
+        """
+        return self.station_arrivals_pred[station_id].ksmallest(k)
 
     def next_arrivals_by_line(self, line_id: str, k: int) -> list[Prediction]:
-        # TODO: returns the next k predictions for the specified line
-        pass
+        """
+        Returns the next k predictions for the specified line
+        """
+        return self.line_arrivals_pred[line_id].ksmallest(k)
 
     def next_arrivals_by_station_and_line(self, station_id: str, line_id: str, k: int) -> list[Prediction]:
-        # TODO: returns the next k predictions for the specified station
-        # that belong to the specified line. Raise an appropriate exception if the station or line is
-        # unknown, or if the line does not serve that station;
-        pass
+        """
+        Returns the next k predictions for the specified station that belong to the specified line. 
+        Raise an appropriate exception if the station or line is unknown, or if the line does not serve that station
+        """
+        if station_id not in self.line[line_id].get_stations():
+            raise TubeError(
+                f"Line: {line_id} does not serve station: {station_id}.")
+        return self.station_and_line_arrivals_pred[(station_id, line_id)].ksmallest(k)
 
     def next_stations_by_train(self, vehicle_id: str, line_id: str, k: int) -> list[Prediction]:
-        # TODO: returns the next k station predictions for the identified vehicle on
-        # the given line
-        pass
+        """
+        Returns the next k station predictions for the identified vehicle on the given line.
+        """
+        return self.train_arrivals_pred[f"{vehicle_id}{line_id}"].ksmallest(k)
 
     def __repr__(self) -> str:
-        # TODO: All prediction-query results must be in non-decreasing order of time_to_station and must not
-        # remove or reorder predictions stored by the network. Support k = -1 to request all matching
-        # predictions, k=0 to request none, and reject other negative values. A valid query with no
-        # matching predictions should return an empty list. You may define private helper methods and
-        # auxiliary indexes, as long as you respect the public interface previously outlined.
-        # Define __repr__ that reports the number of lines and stations in the network.
-        pass
+        """
+        Reports the number of lines and stations in the network.
+        """
+        return f"Network(stations_num:{len(self.stations.keys())}, lines_nums:{len(self.lines.keys())}"
