@@ -1,10 +1,4 @@
 """This module defines our Network class."""
-# TODO: Implement a Network class in network.py that stores the lines, stations, and live arrival
-# predictions. Your implementation should use the Heap and Trie data structures developed in
-# the preceding tasks where appropriate.
-# Network must implement only a ‘single source-of-truth’ for lines and stations: lines are identified by line_id and stations by station_id. Any additional structures used to support the
-# queries below must remain consistent when new data is added.
-
 
 from exceptions import TubeError
 from heap import Heap
@@ -84,6 +78,7 @@ class Network:
             self.train_arrivals_pred[train_key]
         self.train_arrivals_pred[train_key].push(
             prediction.time_to_station, prediction)
+
     ## Query methods:##
 
     def search_by_prefix(self, prefix: str) -> list[Station]:
