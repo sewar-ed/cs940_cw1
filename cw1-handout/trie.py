@@ -4,9 +4,10 @@ from exceptions import TrieError
 
 
 class TrieNode:
-    children = {}
-    objects = set()
-    sub_objs = set()  # all objects in subtree of root
+    def __init__(self):
+        self.children = {}
+        self.objects = set()
+        self.sub_objs = set()  # all objects in subtree of current node
 
 
 class Trie:
@@ -19,8 +20,9 @@ class Trie:
         Associates obj with key,
         indixes each word of the key in the trie to enable obj recovery by prefix.
         """
+        # https://stackoverflow.com/questions/11015320/how-to-create-a-trie-in-python
         # validate keys
-        if not isinstance(key, str) or key == "" or all([w == "" for w in key.split(" ")]):
+        if not isinstance(key, str) or key == "" or all([w == "" for w in key.lower().split(" ")]):
             raise TrieError("Key is empty or is malformed.")
         # extract words from key, remove any empty ones
         words = [w for w in key.lower().split(" ") if w != ""]
@@ -31,8 +33,8 @@ class Trie:
                 if c not in curr_root.children:
                     curr_root.children[c] = TrieNode()
                 curr_root = curr_root.children[c]  # move pointer down
+                curr_root.sub_objs.add(obj)
             curr_root.objects.add(obj)
-        curr_root.sub_objs.add(obj)
 
     def search_by_prefix(self, prefix: str) -> list[any]:
         """
