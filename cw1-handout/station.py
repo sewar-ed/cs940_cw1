@@ -1,13 +1,10 @@
 """This module defines a Station class."""
 
-import json
 import math
 import re
 
 from exceptions import TubeError
-# The 11 Tube lines are the Bakerloo, Central, Circle, District, Hammersmith & City, Jubilee,
-# Metropolitan, Northern, Piccadilly, Victoria, and Waterloo & City
-# TO-DO: ask if this can be done (???)
+# The 11 Tube:
 TUBE_LINES = ['bakerloo', 'central', 'circle', 'district', 'hammersmith-city',
               'jubilee', 'metropolitan', 'northern', 'piccadilly', 'victoria', 'waterloo-city']
 MAX_LAT, MIN_LAT = 90, -90
@@ -65,6 +62,7 @@ class Station:
         return f"This is {self.station_name} station."
 
     def __repr__(self):
+        # https://www.w3schools.com/python/python_magic_repr.asp
         return (f"Station('{self.station_id}', '{self.station_name}', "
                 f"'{self.repr_interchange_lines}', '{self.repr_zones}', '{self.lat}', '{self.lon}')")
 
@@ -76,4 +74,5 @@ class Station:
         """
         Hash on tuples of (id,name).
         """
+        # https://stackoverflow.com/questions/2909106/whats-a-correct-and-good-way-to-implement-hash
         return hash((self.station_id, self.station_name))

@@ -1,7 +1,7 @@
 """This module defines a Prediction class."""
 
 
-from exceptions import TubeError
+from exceptions import PredictionError
 from station import Station
 
 
@@ -19,7 +19,7 @@ class Prediction:
         self.platform_name = platform_name
         self.destination_id = destination_id
         if time_to_station < 0:
-            raise TubeError(
+            raise PredictionError(
                 f"Invalid time to station: {time_to_station}.")
         self.time_to_station = time_to_station
         self.current_location = current_location

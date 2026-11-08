@@ -4,7 +4,7 @@
 from itertools import chain
 
 from branch import Branch
-from exceptions import TubeError
+from exceptions import BranchError, LineError
 
 
 class Line:
@@ -21,12 +21,12 @@ class Line:
         raises an exception if branch is already on the line.
         """
         if branch.id in self.branches:
-            raise TubeError(f"Branch is already present on line {self.name}.")
+            raise LineError(f"Branch is already present on line {self.name}.")
 
     def get_branch(self, id: int) -> Branch:
         if id in self.branches:
             return self.branches[id]
-        raise TubeError(f"Branch does not exist on line {id}.")
+        raise BranchError(f"Branch does not exist on line {id}.")
 
     def get_stations(self) -> set[str]:
         """
@@ -57,5 +57,4 @@ class Line:
         return station in self.stations_on_line
 
     def __repr__(self):
-        # To ask: is this supposed to over get_stations()?
         return f"Line(id={self.id}, name={self.name})"

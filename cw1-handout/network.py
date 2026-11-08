@@ -1,6 +1,6 @@
 """This module defines our Network class."""
 
-from exceptions import TubeError
+from exceptions import NetworkError, TubeError
 from heap import Heap
 from line import Line
 from prediction import Prediction
@@ -35,7 +35,7 @@ class Network:
         """
         if line_id in self.lines:
             return self.lines[line_id]
-        raise TubeError(f"No such line: '{line_id}' in netwrok.")
+        raise NetworkError(f"No such line: '{line_id}' in netwrok.")
 
     def add_station(self, station: Station) -> None:
         """
@@ -51,12 +51,12 @@ class Network:
         """
         if station_id in self.stations:
             return self.stations[station_id]
-        raise TubeError(f"No such station: '{station_id}' in netwrok.")
+        raise NetworkError(f"No such station: '{station_id}' in netwrok.")
 
     def add_prediction(self, prediction: Prediction) -> None:
         """
-        # Adds a prediction and
-        # updates the information needed to support each of the arrival queries below. Predictions are ordered by their time_to_station value.
+        Adds a prediction and updates the information needed to support each of the arrival queries below. 
+        Predictions are ordered by their time_to_station value.
         """
         # create heap for unseen station
         if prediction.next_station_id not in self.station_arrivals_pred:

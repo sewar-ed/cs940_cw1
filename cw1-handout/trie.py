@@ -6,7 +6,7 @@ from exceptions import TrieError
 class TrieNode:
     def __init__(self):
         self.children = {}
-        self.objects = set()
+        self.objects = set()  # eow indicator
         self.sub_objs = set()  # all objects in subtree of current node
 
 
@@ -20,8 +20,8 @@ class Trie:
         Associates obj with key,
         indixes each word of the key in the trie to enable obj recovery by prefix.
         """
-        # https://stackoverflow.com/questions/11015320/how-to-create-a-trie-in-python
-        # validate keys
+        # Reference used: https://stackoverflow.com/questions/11015320/how-to-create-a-trie-in-python
+        # validate keys, normalize by using lower case
         if not isinstance(key, str) or key == "" or all([w == "" for w in key.lower().split(" ")]):
             raise TrieError("Key is empty or is malformed.")
         # extract words from key, remove any empty ones
@@ -33,15 +33,17 @@ class Trie:
                 if c not in curr_root.children:
                     curr_root.children[c] = TrieNode()
                 curr_root = curr_root.children[c]  # move pointer down
+                # add obj for all nodes along the path
                 curr_root.sub_objs.add(obj)
-            curr_root.objects.add(obj)
+            curr_root.objects.add(obj)  # add obj to end of word character
 
     def search_by_prefix(self, prefix: str) -> list[any]:
         """
         Returns all objects for which at least one word in the associated key begins with prefix. Return an empty list if there
         are no matches, and every stored object if prefix is empty. 
         """
-        # approach 2: utilize sub_obj set for each TrieNode to find all obj in its subtree in linear time
+        # approach 1: traverse path using dfs to get to object per path -> recursive might time out, iterative does not meet the requirements.
+        # approach 2: utilize sub_obj set for each TrieNode to find all obj in its subtree in linear time.
         pointer = self.root  # we want to traverse trie
         # find node at end of prefix
         for c in prefix:
@@ -50,35 +52,3 @@ class Trie:
             # find children of the last node in prefix
             pointer = pointer.children[c]
         return list(pointer.sub_objs)
-
-    # approach 1: does not meet complexity requirements
-    # def _dfs(self, visited: set, matching_objects: list[any], root: TrieNode):
-    #     """
-    #     DFS to traverse trie from given root to leaf.
-    #     """
-    #     for obj in root.objects:
-    #         if obj not in visited:  # ensures no duplicates
-    #             visited.add(obj)
-    #             matching_objects.append(obj)  # to preserve order
-    #     sorted_keys = sorted(root.children.keys())  # det. order
-    #     for c in sorted_keys:
-    #         self._defs(root.children[c], visited, matching_objects)
-    #     # iterative approach:
-    #     # to_visit = [root]
-    #     # while to_visit:
-    #     #     curr_root = to_visit.pop()
-    #     #     # push unseen obj
-    #     #     for obj in curr_root.objects:
-    #     #         if obj not in visited:
-    #     #             visited.add(obj)
-    #     #             matching_objects.append(obj)
-    #     #     # to maintain det. order
-    #     #     sorted_keys = sorted(root.children.keys())
-    #     #     for c in sorted_keys:
-    #     #         to_visit.append(root.children[c])
-    #    Inside function:
-        # visited = set()
-        # matching_objects = []
-        # # our leaves are our corresponding key objects, find all paths to leaves using dfs
-        # self._dfs(visited, matching_objects, pointer)
-        # return matching_objects

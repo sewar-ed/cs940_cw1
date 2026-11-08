@@ -6,7 +6,7 @@ from exceptions import HeapError
 
 class Heap:
     def __init__(self):
-        self.heap = []  # should this be a private attribute?
+        self.heap = []
 
     def _propagate_up(self, item_idx: int) -> None:
         """
@@ -147,43 +147,7 @@ class Heap:
         return len(self.heap)
 
     def __bool__(self) -> bool:
-        # should this check if heap non empt or check heap property?
         return len(self.heap) > 0
 
     def __repr__(self) -> str:
         return f"Heap()"
-
-
-# if __name__ == '__main__':
-#     import random
-#     print("Running Heap Class tests...")
-#     my_heap = Heap()
-#     print(f"initial heap: {my_heap}")
-    # objs = [(1, "a"), (2, "b"), (3, "c"), (4, "d"), (5, "e")]
-    # objs = [(1, "a"), (2, "b"), (3, "c"), (4, "d"), (5, "e")]
-    # results:
-    # Running Heap Class tests...
-    # initial heap: Heap()
-    # shuffled objs: [(2, 'b'), (2, 'c'), (5, 'e'), (4, 'd'), (1, 'a')]
-    # pushed (2, b), heap: [(2, 'b')]
-    # pushed (2, c), heap: [(2, 'b'), (2, 'c')]
-    # pushed (5, e), heap: [(2, 'b'), (2, 'c'), (5, 'e')]
-    # pushed (4, d), heap: [(2, 'b'), (2, 'c'), (5, 'e'), (4, 'd')]
-    # pushed (1, a), heap: [(1, 'a'), (2, 'b'), (5, 'e'), (4, 'd'), (2, 'c')]
-    # popped, heap: [(2, 'b'), (2, 'c'), (5, 'e'), (4, 'd')]
-    # random.shuffle(objs)
-    # print(f"shuffled objs: {objs}")
-    # for key, obj in objs:
-    #     my_heap.push(key, obj)
-    #     print(f"pushed ({key}, {obj}), heap: {my_heap.heap}")
-    # my_heap.pop()
-    # print(f"popped, heap: {my_heap.heap}")
-    # print(f"peek: {my_heap.peek()}")
-    # print("=================")
-    # print("Running Heapify tests...")
-    # # TODO: debug this does not preserve insertion order for equal keys
-    # list_to_heapify = [(1, 'e'), (1, 'a'), (1, 'c'), (1, 'd'), (1, 'b')]
-    # print(f"list to heapify: {list_to_heapify}")
-    # heap_from_list = Heap.heapify(list_to_heapify)
-    # print(f"ksmallest from heap: {my_heap.ksmallest(3)}")
-    # print(f"number of swaps: {swaps}")

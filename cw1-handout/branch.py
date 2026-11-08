@@ -1,7 +1,7 @@
 """This module defines a Branch class."""
 
 
-from exceptions import DataStructureError
+from exceptions import BranchError
 from station import Station
 
 
@@ -48,7 +48,7 @@ class Branch:
 
     def __getitem__(self, idx):
         if idx > len(self.stations) or idx < 0:
-            raise DataStructureError(
+            raise BranchError(
                 "Index is out of bounds for this branch.")
         return self.stations[idx]
 
