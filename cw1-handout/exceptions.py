@@ -8,15 +8,15 @@ class TubeError(Exception):
 
 
 class BranchError(TubeError):
-    """Excepption raised for Branch related errors."""
+    """Exception raised for Branch related errors."""
 
 
 class LineError(TubeError):
-    """Excepption raised for Line related errors."""
+    """Exception raised for Line related errors."""
 
 
 class PredictionError(TubeError):
-    """Excepption raised for Prediction related errors."""
+    """Exception raised for Prediction related errors."""
 
 
 class DataStructureError(Exception):
@@ -32,4 +32,4 @@ class TrieError(DataStructureError):
 
 
 class NetworkError(TubeError, DataStructureError):
-    """ Excepption raised for Network related errors."""
+    """ Exception raised for Network related errors."""
